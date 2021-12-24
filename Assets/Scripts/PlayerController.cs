@@ -1,18 +1,15 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+
 
 public class PlayerController : MonoBehaviour
 {
-
     public Rigidbody rb;
-	public float speed = 2000;
-    // Use this for initialization
-    void Start()
-    {
-        Debug.Log("Starting");
-    }
+    public int health = 5;
+    public float speed = 2000f;
+    private int score = 0;
 
-	// Update is called once per frame
+    // Update is called once per frame
     void FixedUpdate()
     {
         if (Input.GetKey(KeyCode.D))
@@ -36,9 +33,35 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Pickup"))
+        {
+            score++;
+            Debug.Log("Score: " + score);
+            Destroy(other.gameObject);
+        }
+
+        if (other.gameObject.CompareTag("Trap"))
+        {
+            health--;
+            Debug.Log("Health: " + health);
+        }
+
+        if (other.gameObject.CompareTag("Goal"))
+        {
+            Debug.Log("You win!");
+        }
+    }
+
     void Update()
     {
-
+        if (health == 0)
+        {
+            Debug.Log("Game Over!");
+            // Reestar Level
+            Scene scene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(scene.name);
+        }
     }
 }
